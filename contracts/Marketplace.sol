@@ -61,6 +61,44 @@ contract Marketplace {
         products[i].name = name;
         products[i].description = description;
         products[i].price = price;
+        products[i].sellerId = payable(msg.sender);
         productList.push(i);
+    }
+
+    // ============================== ORDERS ============================== //
+    struct Order {
+        uint256 id;
+        string status;
+        uint256 productId;
+        address buyerId;
+        address sellerId;
+    }
+
+    mapping(uint256 => Order) public orders;
+    uint256[] public orderList;
+
+    function getOrderCount() public view returns (uint256 orderCount) {
+        return orderList.length;
+    }
+
+    function buyProduct(uint256 productId) public payable {
+        require(
+            accounts[msg.sender].id == msg.sender,
+            "Atualize seus dados para comprar um produto"
+        );
+        require(
+            msg.value == products[productId].price,
+            "O valor enviado deve ser igual o valor do produto"
+        );
+
+        products[productId].sellerId.transfer(msg.value);
+
+        uint256 i = orderList.length;
+        orders[i].id = i;
+        orders[i].status = "Pedido realizado";
+        orders[i].productId = productId;
+        orders[i].buyerId = msg.sender;
+        orders[i].sellerId = products[productId].sellerId;
+        orderList.push(i);
     }
 }

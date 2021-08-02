@@ -4,6 +4,7 @@ import chaiAsPromised from "chai-as-promised";
 import { Marketplace, Marketplace__factory } from "../types/ethers-contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { formatEther, formatUnits, parseEther } from "ethers/lib/utils";
+import { BigNumber } from "ethers";
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -57,8 +58,32 @@ describe("Marketplace", () => {
       "+55 (92) 9 8204-1337",
       "69000-123"
     );
+    await contracts[2].buyProduct(BigNumber.from(0), {
+      value: parseEther("5"),
+    });
 
-    // contracts.
+    await contracts[3].updateAccount(
+      "Enrique Izel",
+      "enrique.izel@gmail.com",
+      "+55 (92) 9 8211-2358",
+      "69050-001"
+    );
+    await contracts[3].buyProduct(BigNumber.from(1), {
+      value: parseEther("3"),
+    });
+
+    // const sellerBalance = formatEther(await signers[1].getBalance());
+    // const buyerBalance = formatEther(await signers[2].getBalance());
+    // console.log({
+    //   sellerBalance,
+    //   buyerBalance,
+    // });
+
+    const orderCount = parseInt((await contract.getOrderCount())._hex);
+    console.log({ orderCount });
+    for (let i = 0; i < orderCount; i++) {
+      console.log(await contract.orders(i));
+    }
 
     // console.log(await contract.accounts(buyer.address));
   });
