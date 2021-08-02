@@ -18,10 +18,10 @@ contract Shoppy {
     }
     struct product {
         string productId;
-        string productName;
-        string Category;
+        string name;
         uint256 price;
-        string description;
+        string location;
+        string method;
         address payable seller;
         bool isActive;
     }
@@ -119,10 +119,10 @@ contract Shoppy {
 
     function addProduct(
         string memory _productId,
-        string memory _productName,
-        string memory _category,
+        string memory _name,
         uint256 _price,
-        string memory _description
+        string memory _location,
+        string memory _method
     ) public {
         require(sellers[msg.sender].bgPaid, "You are not Registered as Seller");
         require(
@@ -132,18 +132,18 @@ contract Shoppy {
 
         product memory newProduct = product(
             _productId,
-            _productName,
-            _category,
+            _name,
             _price,
-            _description,
+            _location,
+            _method,
             payable(msg.sender),
             true
         );
         products[_productId].productId = _productId;
-        products[_productId].productName = _productName;
-        products[_productId].Category = _category;
-        products[_productId].description = _description;
+        products[_productId].name = _name;
         products[_productId].price = _price;
+        products[_productId].location = _location;
+        products[_productId].method = _method;
         products[_productId].seller = payable(msg.sender);
         products[_productId].isActive = true;
         allProducts.push(newProduct);

@@ -12,6 +12,7 @@
     "compile": "hardhat compile && typechain --target ethers-v5 ./artifacts/contracts/Shoppy.sol/Shoppy.json"
   },
   "dependencies": {
+    "antd": "^4.16.9",
     "next": "^10.0.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
