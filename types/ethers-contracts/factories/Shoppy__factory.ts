@@ -6,27 +6,30 @@ import { Signer } from "ethers";
 import { Provider, TransactionRequest } from "@ethersproject/providers";
 import { Contract, ContractFactory, Overrides } from "@ethersproject/contracts";
 
-import type { Shoppy } from "../Shoppy";
+import type { Marketplace } from "../Marketplace";
 
-export class Shoppy__factory extends ContractFactory {
+export class Marketplace__factory extends ContractFactory {
   constructor(signer?: Signer) {
     super(_abi, _bytecode, signer);
   }
 
-  deploy(overrides?: Overrides): Promise<Shoppy> {
-    return super.deploy(overrides || {}) as Promise<Shoppy>;
+  deploy(overrides?: Overrides): Promise<Marketplace> {
+    return super.deploy(overrides || {}) as Promise<Marketplace>;
   }
   getDeployTransaction(overrides?: Overrides): TransactionRequest {
     return super.getDeployTransaction(overrides || {});
   }
-  attach(address: string): Shoppy {
-    return super.attach(address) as Shoppy;
+  attach(address: string): Marketplace {
+    return super.attach(address) as Marketplace;
   }
-  connect(signer: Signer): Shoppy__factory {
-    return super.connect(signer) as Shoppy__factory;
+  connect(signer: Signer): Marketplace__factory {
+    return super.connect(signer) as Marketplace__factory;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): Shoppy {
-    return new Contract(address, _abi, signerOrProvider) as Shoppy;
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): Marketplace {
+    return new Contract(address, _abi, signerOrProvider) as Marketplace;
   }
 }
 

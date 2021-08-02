@@ -22,7 +22,7 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
-interface ShoppyInterface extends ethers.utils.Interface {
+interface MarketplaceInterface extends ethers.utils.Interface {
   functions: {
     "addProduct(string,string,uint256,string)": FunctionFragment;
     "allProducts(uint256)": FunctionFragment;
@@ -124,7 +124,7 @@ interface ShoppyInterface extends ethers.utils.Interface {
   events: {};
 }
 
-export class Shoppy extends Contract {
+export class Marketplace extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -165,7 +165,7 @@ export class Shoppy extends Contract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: ShoppyInterface;
+  interface: MarketplaceInterface;
 
   functions: {
     addProduct(

@@ -70,13 +70,6 @@ describe("Marketplace", () => {
       value: parseEther("3"),
     });
 
-    // const sellerBalance = formatEther(await signers[1].getBalance());
-    // const buyerBalance = formatEther(await signers[2].getBalance());
-    // console.log({
-    //   sellerBalance,
-    //   buyerBalance,
-    // });
-
     const orderCount = parseInt((await contract.getOrderCount())._hex);
     console.log({ orderCount });
     for (let i = 0; i < orderCount; i++) {

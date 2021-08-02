@@ -1,34 +1,26 @@
-import { Alert, Button, Card, Form, Input, List, Space, Tabs } from "antd";
+import { Alert, Button, Form, Input, Space, Tabs } from "antd";
 import React, { useState, useEffect } from "react";
 import Text from "antd/lib/typography/Text";
-import { Shoppy } from "../types/ethers-contracts";
-import { BigNumber, ethers } from "ethers";
+import { Marketplace } from "../types/ethers-contracts";
+import { ethers } from "ethers";
 import { getErrorMessage } from "../utils";
 import Link from "antd/lib/typography/Link";
 import { Catalog } from "../components/Catalog";
+import { Orders } from "../components/Orders";
 
 const { TabPane } = Tabs;
 
 interface BuyerAccount {
   name: string;
   email: string;
+  phone: string;
   postalCode: string;
 }
 
 interface Props {
   provider: ethers.providers.Web3Provider;
   account: string;
-  contract: Shoppy;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  price: string;
-  realPrice: BigNumber;
-  description: string;
-  sellerName: string;
-  isActive: boolean;
+  contract: Marketplace;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -37,13 +29,14 @@ const Page = ({ account, contract }: Props) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function getBuyerAccount() {
-    const rawBuyerAccount = await contract.users(account);
+    const rawBuyerAccount = await contract.accounts(account);
     console.log({ rawBuyerAccount });
     if (rawBuyerAccount.name) {
       setBuyerAccount({
         name: rawBuyerAccount.name,
         email: rawBuyerAccount.email,
-        postalCode: rawBuyerAccount.deliveryAddress,
+        phone: rawBuyerAccount.phone,
+        postalCode: rawBuyerAccount.postalCode,
       });
     }
   }
@@ -55,15 +48,22 @@ const Page = ({ account, contract }: Props) => {
   const handleSignUp = async ({
     name,
     email,
+    phone,
     postalCode,
   }: {
     name: string;
     email: string;
+    phone: string;
     postalCode: string;
   }) => {
     setErrorMessage(null);
     try {
-      const transaction = await contract.createAccount(name, email, postalCode);
+      const transaction = await contract.updateAccount(
+        name,
+        email,
+        phone,
+        postalCode
+      );
       await transaction?.wait();
       console.log({ transaction });
       await getBuyerAccount();
@@ -92,11 +92,10 @@ const Page = ({ account, contract }: Props) => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            label="E-mail"
-            name="email"
-            rules={[{ required: true }, { whitespace: false }]}
-          >
+          <Form.Item label="E-mail" name="email">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Celular" name="phone">
             <Input />
           </Form.Item>
           <Form.Item
@@ -126,7 +125,9 @@ const Page = ({ account, contract }: Props) => {
       <TabPane tab="Catálogo" key="1">
         <Catalog buyerAccount={buyerAccount} contract={contract} />
       </TabPane>
-      <TabPane tab="Pedidos" key="2"></TabPane>
+      <TabPane tab="Pedidos" key="2">
+        <Orders buyerAccount={buyerAccount} contract={contract} />
+      </TabPane>
     </Tabs>
   );
 };

@@ -1,7 +1,7 @@
 import { Alert, Button, Card, Form, Input, List, Space, Tabs } from "antd";
 import React, { useState, useEffect } from "react";
 import Text from "antd/lib/typography/Text";
-import { Shoppy } from "../types/ethers-contracts";
+import { Marketplace } from "../types/ethers-contracts";
 import { BigNumber, ethers } from "ethers";
 import { id } from "ethers/lib/utils";
 
@@ -13,17 +13,17 @@ interface BuyerAccount {
 
 interface Props {
   buyerAccount: BuyerAccount;
-  contract: Shoppy;
+  contract: Marketplace;
 }
 
 interface Product {
-  id: string;
+  id: number;
   name: string;
   price: string;
   realPrice: BigNumber;
   description: string;
   sellerName: string;
-  isActive: boolean;
+  quantity: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -36,12 +36,14 @@ export const Catalog = ({ buyerAccount, contract }: Props) => {
 
   async function getProducts() {
     const newProducts: Product[] = [];
-    for (let i = 0; ; i++) {
+
+    const productCount = parseInt((await contract.getProductCount())._hex);
+    for (let i = 0; i < productCount; i++) {
       try {
-        const rawProduct = await contract.allProducts(i);
-        const rawSeller = await contract.sellers(rawProduct.seller);
+        const rawProduct = await contract.products(i);
+        const rawSeller = await contract.accounts(rawProduct.sellerId);
         newProducts.push({
-          id: rawProduct.productId,
+          id: parseInt(rawProduct.id._hex),
           name: rawProduct.name,
           price: ethers.utils.formatEther(
             BigNumber.from(rawProduct.price._hex).toString()
@@ -51,7 +53,7 @@ export const Catalog = ({ buyerAccount, contract }: Props) => {
             ? rawProduct.description
             : "Produto sem descrição",
           sellerName: rawSeller.name,
-          isActive: rawProduct.isActive,
+          quantity: parseInt(rawProduct.quantity._hex),
         });
       } catch (error) {
         break;
@@ -61,9 +63,13 @@ export const Catalog = ({ buyerAccount, contract }: Props) => {
   }
 
   async function buyProduct(product: Product) {
-    const transaction = await contract.buyProduct(product.id, {
-      value: product.realPrice,
-    });
+    const transaction = await contract.buyProduct(
+      product.id,
+      product.quantity,
+      {
+        value: product.realPrice,
+      }
+    );
     await transaction?.wait();
     console.log({ transaction });
   }
@@ -82,7 +88,7 @@ export const Catalog = ({ buyerAccount, contract }: Props) => {
             style={{ width: 300, height: 200 }}
             actions={[
               <Button
-                disabled={!product.isActive}
+                disabled={product.quantity <= 0}
                 type="primary"
                 block
                 onClick={() => buyProduct(product)}

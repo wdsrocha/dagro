@@ -2,10 +2,10 @@ import "@nomiclabs/hardhat-ethers";
 import { ethers } from "hardhat";
 
 async function main() {
-  const contractFactory = await ethers.getContractFactory("Shoppy");
+  const contractFactory = await ethers.getContractFactory("Marketplace");
   const contract = await contractFactory.deploy();
   await contract.deployed();
-  console.log("Shoppy deployed to:", contract.address);
+  console.log("Marketplace deployed to:", contract.address);
 }
 
 main()

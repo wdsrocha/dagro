@@ -2,8 +2,8 @@ import { Alert, Button, Card, Form, Input, Space } from "antd";
 import { v4 as uuidv4 } from "uuid";
 import React, { useState, useEffect } from "react";
 import Text from "antd/lib/typography/Text";
-import { Shoppy } from "../types/ethers-contracts";
-import { ethers } from "ethers";
+import { Marketplace } from "../types/ethers-contracts";
+import { BigNumber, ethers } from "ethers";
 import { getErrorMessage } from "../utils";
 import TextArea from "antd/lib/input/TextArea";
 import { parseEther } from "ethers/lib/utils";
@@ -15,18 +15,18 @@ interface SellerAccount {
 interface Props {
   provider: ethers.providers.Web3Provider;
   account: string;
-  contract: Shoppy;
+  contract: Marketplace;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const Page = ({ account, contract }: Props) => {
+const Page = ({ provider, account, contract }: Props) => {
   const [sellerAccount, setSellerAccount] = useState<SellerAccount | null>(
     null
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function getSellerAccount() {
-    const rawSellerAccount = await contract.sellers(account);
+    const rawSellerAccount = await contract.accounts(account);
     console.log({ rawSellerAccount });
     if (rawSellerAccount.name) {
       setSellerAccount({ name: rawSellerAccount.name });
@@ -40,9 +40,7 @@ const Page = ({ account, contract }: Props) => {
   const handleSignUp = async ({ sellerName }: { sellerName: string }) => {
     setErrorMessage(null);
     try {
-      const transaction = await contract.sellerSignUp(sellerName, {
-        value: ethers.utils.parseEther("5"),
-      });
+      const transaction = await contract.updateAccount(sellerName, "", "", "");
       await transaction?.wait();
       console.log({ transaction });
       await getSellerAccount();
@@ -55,8 +53,8 @@ const Page = ({ account, contract }: Props) => {
     return (
       <Space direction="vertical">
         <Text>
-          Você ainda não está cadastrado como vendedor. Preencha seu nome abaixo
-          e comece a vender por apenas 5ETH!
+          Você ainda não está cadastrado como vendedor. Preencha seu nome
+          abaixo.
         </Text>
         {errorMessage ? (
           <Alert
@@ -101,14 +99,15 @@ const Page = ({ account, contract }: Props) => {
         description,
       });
       const transaction = await contract.addProduct(
-        uuidv4(),
         name,
+        description ? description : "",
         parseEther(price),
-        description
+        4
       );
       await transaction?.wait();
       console.log({ transaction });
     } catch (error) {
+      console.error(error);
       setErrorMessage(getErrorMessage(error?.data?.message));
     }
   };

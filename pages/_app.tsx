@@ -6,21 +6,21 @@ import type { AppProps } from "next/app";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { Shoppy, Shoppy__factory } from "../types/ethers-contracts";
+import { Marketplace, Marketplace__factory } from "../types/ethers-contracts";
 import ptBR from "antd/lib/locale/pt_BR";
 import { Hyperlink } from "../utils";
 
-const CONTRACT_ADDRESS = "0x61C23fdE94baC7d6667BACF1979c46fb75A8Aa09";
+const CONTRACT_ADDRESS = "0x5f271a322A6de460f3eC5047044c6b80bce0c1F7";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function App({ Component, pageProps }: AppProps) {
   const [provider, setProvider] = useState<ethers.providers.Web3Provider>();
   const [account, setAccount] = useState<string>();
-  const [contract, setContract] = useState<Shoppy>();
+  const [contract, setContract] = useState<Marketplace>();
 
   useEffect(() => {
     if (provider && account) {
-      const newContract = Shoppy__factory.connect(
+      const newContract = Marketplace__factory.connect(
         CONTRACT_ADDRESS,
         provider.getSigner()
       );
