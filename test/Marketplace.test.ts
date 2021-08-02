@@ -43,8 +43,8 @@ describe("Marketplace", () => {
       "69050-120"
     );
 
-    contracts[1].addProduct("Abacaxi (un.)", "Delicioso.", parseEther("5"));
-    contracts[1].addProduct("Alface (kg.)", "Fresquinho..", parseEther("3"));
+    contracts[1].addProduct("Abacaxi (un.)", "Delicioso.", parseEther("5"), 1);
+    contracts[1].addProduct("Alface (kg.)", "Fresquinho..", parseEther("3"), 1);
 
     const productCount = parseInt((await contract.getProductCount())._hex);
     console.log({ productCount });
@@ -58,7 +58,7 @@ describe("Marketplace", () => {
       "+55 (92) 9 8204-1337",
       "69000-123"
     );
-    await contracts[2].buyProduct(BigNumber.from(0), {
+    await contracts[2].buyProduct(0, 1, {
       value: parseEther("5"),
     });
 
@@ -68,7 +68,12 @@ describe("Marketplace", () => {
       "+55 (92) 9 8211-2358",
       "69050-001"
     );
-    await contracts[3].buyProduct(BigNumber.from(1), {
+    await expect(
+      contracts[3].buyProduct(1, 2, {
+        value: parseEther("3"),
+      })
+    ).to.be.reverted;
+    await contracts[3].buyProduct(1, 1, {
       value: parseEther("3"),
     });
 

@@ -36,6 +36,7 @@ contract Marketplace {
         string name;
         string description;
         uint256 price;
+        uint256 quantity;
         address payable sellerId;
     }
 
@@ -49,7 +50,8 @@ contract Marketplace {
     function addProduct(
         string memory name,
         string memory description,
-        uint256 price
+        uint256 price,
+        uint256 quantity
     ) public {
         require(
             accounts[msg.sender].id == msg.sender,
@@ -61,6 +63,7 @@ contract Marketplace {
         products[i].name = name;
         products[i].description = description;
         products[i].price = price;
+        products[i].quantity = quantity;
         products[i].sellerId = payable(msg.sender);
         productList.push(i);
     }
@@ -81,10 +84,14 @@ contract Marketplace {
         return orderList.length;
     }
 
-    function buyProduct(uint256 productId) public payable {
+    function buyProduct(uint256 productId, uint256 quantity) public payable {
         require(
             accounts[msg.sender].id == msg.sender,
             "Atualize seus dados para comprar um produto"
+        );
+        require(
+            products[productId].quantity >= quantity,
+            "Quantidade indisponivel"
         );
         require(
             msg.value == products[productId].price,
@@ -92,6 +99,7 @@ contract Marketplace {
         );
 
         products[productId].sellerId.transfer(msg.value);
+        products[productId].quantity -= quantity;
 
         uint256 i = orderList.length;
         orders[i].id = i;
