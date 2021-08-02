@@ -1,11 +1,10 @@
-import { Alert, Button, Card, Form, Input, Space } from "antd";
+import { Alert, Button, Card, Form, Input, List, Space } from "antd";
 import React, { useState, useEffect } from "react";
 import Text from "antd/lib/typography/Text";
 import { Shoppy } from "../types/ethers-contracts";
 import { BigNumber, ethers } from "ethers";
 import { getErrorMessage } from "../utils";
 import Link from "antd/lib/typography/Link";
-import Meta from "antd/lib/card/Meta";
 
 interface BuyerAccount {
   name: string;
@@ -64,7 +63,9 @@ export const BuyTab = ({ account, contract }: Props) => {
             BigNumber.from(rawProduct.price._hex).toString()
           ),
           realPrice: rawProduct.price,
-          description: rawProduct.description,
+          description: rawProduct.description
+            ? rawProduct.description
+            : "Produto sem descrição",
           sellerName: rawSeller.name,
           isActive: rawProduct.isActive,
         });
@@ -165,33 +166,37 @@ export const BuyTab = ({ account, contract }: Props) => {
   return (
     <>
       <Card title="Catálogo de produtos">
-        {products.map((product) => (
-          <Card
-            title={product.name}
-            type="inner"
-            key={product.id}
-            style={{ maxWidth: 300 }}
-            actions={[
-              <Button
-                disabled={!product.isActive}
-                type="primary"
-                block
-                onClick={() => buyProduct(product)}
+        <List
+          grid={{ gutter: 16, column: 4 }}
+          dataSource={products}
+          renderItem={(product) => (
+            <List.Item>
+              <Card
+                title={product.name}
+                type="inner"
+                key={product.id}
+                bodyStyle={{ height: "70%" }}
+                style={{ width: 300, height: 200 }}
+                actions={[
+                  <Button
+                    disabled={!product.isActive}
+                    type="primary"
+                    block
+                    onClick={() => buyProduct(product)}
+                  >
+                    Comprar
+                  </Button>,
+                ]}
               >
-                Comprar
-              </Button>,
-            ]}
-          >
-            <Text>
-              {`Fornecedor: ${product.sellerName}`}
-              <br />
-              <span style={{ color: "gray" }}>{product.description}</span>
-              <br />
-              <b style={{ fontSize: 17 }}>{`${product.price} ETH`}</b>
-              <br />
-            </Text>
-          </Card>
-        ))}
+                Fornecedor: <b>{product.sellerName}</b>
+                <br />
+                <span style={{ color: "gray" }}>{product.description}</span>
+                <br />
+                <b style={{ fontSize: 17 }}>{`${product.price} ETH`}</b>
+              </Card>
+            </List.Item>
+          )}
+        />
       </Card>
     </>
   );
