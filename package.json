@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write . --ignore-path .gitignore",
-    "compile": "hardhat compile && typechain --target ethers-v5 ./artifacts/contracts/Shoppy.sol/Shoppy.json"
+    "compile": "hardhat compile && typechain --target ethers-v5 ./artifacts/contracts/Marketplace.sol/Marketplace.json"
   },
   "dependencies": {
     "antd": "^4.16.9",
