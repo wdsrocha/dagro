@@ -1,10 +1,13 @@
-import { Alert, Button, Card, Form, Input, List, Space } from "antd";
+import { Alert, Button, Card, Form, Input, List, Space, Tabs } from "antd";
 import React, { useState, useEffect } from "react";
 import Text from "antd/lib/typography/Text";
 import { Shoppy } from "../types/ethers-contracts";
 import { BigNumber, ethers } from "ethers";
 import { getErrorMessage } from "../utils";
 import Link from "antd/lib/typography/Link";
+import { Catalog } from "../components/Catalog";
+
+const { TabPane } = Tabs;
 
 interface BuyerAccount {
   name: string;
@@ -28,15 +31,10 @@ interface Product {
   isActive: boolean;
 }
 
-// const products: Product[] = [];
-// console.log("products:");
-// products.forEach((product) => console.log({ product }));
-
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const BuyTab = ({ account, contract }: Props) => {
+const Page = ({ account, contract }: Props) => {
   const [buyerAccount, setBuyerAccount] = useState<BuyerAccount | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
 
   async function getBuyerAccount() {
     const rawBuyerAccount = await contract.users(account);
@@ -50,41 +48,9 @@ export const BuyTab = ({ account, contract }: Props) => {
     }
   }
 
-  async function getProducts() {
-    const newProducts: Product[] = [];
-    for (let i = 0; ; i++) {
-      try {
-        const rawProduct = await contract.allProducts(i);
-        const rawSeller = await contract.sellers(rawProduct.seller);
-        newProducts.push({
-          id: rawProduct.productId,
-          name: rawProduct.name,
-          price: ethers.utils.formatEther(
-            BigNumber.from(rawProduct.price._hex).toString()
-          ),
-          realPrice: rawProduct.price,
-          description: rawProduct.description
-            ? rawProduct.description
-            : "Produto sem descrição",
-          sellerName: rawSeller.name,
-          isActive: rawProduct.isActive,
-        });
-      } catch (error) {
-        break;
-      }
-    }
-    setProducts(newProducts);
-  }
-
   useEffect(() => {
     getBuyerAccount();
   }, [contract]);
-
-  useEffect(() => {
-    if (buyerAccount) {
-      getProducts();
-    }
-  }, [buyerAccount]);
 
   const handleSignUp = async ({
     name,
@@ -155,49 +121,14 @@ export const BuyTab = ({ account, contract }: Props) => {
     );
   }
 
-  async function buyProduct(product: Product) {
-    const transaction = await contract.buyProduct(product.id, {
-      value: product.realPrice,
-    });
-    await transaction?.wait();
-    console.log({ transaction });
-  }
-
   return (
-    <>
-      <Card title="Catálogo de produtos">
-        <List
-          grid={{ gutter: 16, column: 4 }}
-          dataSource={products}
-          renderItem={(product) => (
-            <List.Item>
-              <Card
-                title={product.name}
-                type="inner"
-                key={product.id}
-                bodyStyle={{ height: "70%" }}
-                style={{ width: 300, height: 200 }}
-                actions={[
-                  <Button
-                    disabled={!product.isActive}
-                    type="primary"
-                    block
-                    onClick={() => buyProduct(product)}
-                  >
-                    Comprar
-                  </Button>,
-                ]}
-              >
-                Fornecedor: <b>{product.sellerName}</b>
-                <br />
-                <span style={{ color: "gray" }}>{product.description}</span>
-                <br />
-                <b style={{ fontSize: 17 }}>{`${product.price} ETH`}</b>
-              </Card>
-            </List.Item>
-          )}
-        />
-      </Card>
-    </>
+    <Tabs defaultActiveKey="1">
+      <TabPane tab="Catálogo" key="1">
+        <Catalog buyerAccount={buyerAccount} contract={contract} />
+      </TabPane>
+      <TabPane tab="Pedidos" key="2"></TabPane>
+    </Tabs>
   );
 };
+
+export default Page;

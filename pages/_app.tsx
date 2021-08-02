@@ -1,4 +1,4 @@
-import { Button, ConfigProvider, Empty, Layout } from "antd";
+import { Button, ConfigProvider, Empty, Layout, Menu } from "antd";
 import "antd/dist/antd.css";
 import ErrorBoundary from "antd/lib/alert/ErrorBoundary";
 import { Content, Footer, Header } from "antd/lib/layout/layout";
@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { Shoppy, Shoppy__factory } from "../types/ethers-contracts";
 import ptBR from "antd/lib/locale/pt_BR";
+import { Hyperlink } from "../utils";
 
 const CONTRACT_ADDRESS = "0x61C23fdE94baC7d6667BACF1979c46fb75A8Aa09";
 
@@ -66,11 +67,13 @@ function App({ Component, pageProps }: AppProps) {
           <Header
             style={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "start",
+              justifyItems: "center",
               alignItems: "center",
             }}
           >
-            <Text
+            <Hyperlink
+              href="/"
               style={{
                 fontFamily: "monospace",
                 color: "white",
@@ -79,7 +82,17 @@ function App({ Component, pageProps }: AppProps) {
             >
               🥕 <span style={{ color: "orange" }}>D</span>
               <span style={{ color: "green" }}>Agro</span>
-            </Text>
+            </Hyperlink>
+            <nav style={{ marginLeft: 32, display: "flex", flexGrow: 1 }}>
+              <Menu mode="horizontal" theme="dark">
+                <Menu.Item key="buy">
+                  <Hyperlink href="/buy">Comprar</Hyperlink>
+                </Menu.Item>
+                <Menu.Item key="sell">
+                  <Hyperlink href="/sell">Vender</Hyperlink>
+                </Menu.Item>
+              </Menu>
+            </nav>
             <Account />
           </Header>
           <Content style={{ padding: "0 50px" }}>
