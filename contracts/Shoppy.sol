@@ -20,8 +20,7 @@ contract Shoppy {
         string productId;
         string name;
         uint256 price;
-        string location;
-        string method;
+        string description;
         address payable seller;
         bool isActive;
     }
@@ -121,8 +120,7 @@ contract Shoppy {
         string memory _productId,
         string memory _name,
         uint256 _price,
-        string memory _location,
-        string memory _method
+        string memory _description
     ) public {
         require(sellers[msg.sender].bgPaid, "You are not Registered as Seller");
         require(
@@ -134,16 +132,14 @@ contract Shoppy {
             _productId,
             _name,
             _price,
-            _location,
-            _method,
+            _description,
             payable(msg.sender),
             true
         );
         products[_productId].productId = _productId;
         products[_productId].name = _name;
         products[_productId].price = _price;
-        products[_productId].location = _location;
-        products[_productId].method = _method;
+        products[_productId].description = _description;
         products[_productId].seller = payable(msg.sender);
         products[_productId].isActive = true;
         allProducts.push(newProduct);

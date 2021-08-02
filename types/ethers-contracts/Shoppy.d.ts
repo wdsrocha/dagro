@@ -24,7 +24,7 @@ import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
 interface ShoppyInterface extends ethers.utils.Interface {
   functions: {
-    "addProduct(string,string,uint256,string,string)": FunctionFragment;
+    "addProduct(string,string,uint256,string)": FunctionFragment;
     "allProducts(uint256)": FunctionFragment;
     "buyProduct(string)": FunctionFragment;
     "cancelOrder(string,uint256)": FunctionFragment;
@@ -41,7 +41,7 @@ interface ShoppyInterface extends ethers.utils.Interface {
 
   encodeFunctionData(
     functionFragment: "addProduct",
-    values: [string, string, BigNumberish, string, string]
+    values: [string, string, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "allProducts",
@@ -169,17 +169,15 @@ export class Shoppy extends Contract {
       _productId: string,
       _name: string,
       _price: BigNumberish,
-      _location: string,
-      _method: string,
+      _description: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
-    "addProduct(string,string,uint256,string,string)"(
+    "addProduct(string,string,uint256,string)"(
       _productId: string,
       _name: string,
       _price: BigNumberish,
-      _location: string,
-      _method: string,
+      _description: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
 
@@ -187,12 +185,11 @@ export class Shoppy extends Contract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, string, string, string, boolean] & {
+      [string, string, BigNumber, string, string, boolean] & {
         productId: string;
         name: string;
         price: BigNumber;
-        location: string;
-        method: string;
+        description: string;
         seller: string;
         isActive: boolean;
       }
@@ -202,12 +199,11 @@ export class Shoppy extends Contract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, string, string, string, boolean] & {
+      [string, string, BigNumber, string, string, boolean] & {
         productId: string;
         name: string;
         price: BigNumber;
-        location: string;
-        method: string;
+        description: string;
         seller: string;
         isActive: boolean;
       }
@@ -346,17 +342,15 @@ export class Shoppy extends Contract {
     _productId: string,
     _name: string,
     _price: BigNumberish,
-    _location: string,
-    _method: string,
+    _description: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
-  "addProduct(string,string,uint256,string,string)"(
+  "addProduct(string,string,uint256,string)"(
     _productId: string,
     _name: string,
     _price: BigNumberish,
-    _location: string,
-    _method: string,
+    _description: string,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
@@ -364,12 +358,11 @@ export class Shoppy extends Contract {
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, BigNumber, string, string, string, boolean] & {
+    [string, string, BigNumber, string, string, boolean] & {
       productId: string;
       name: string;
       price: BigNumber;
-      location: string;
-      method: string;
+      description: string;
       seller: string;
       isActive: boolean;
     }
@@ -379,12 +372,11 @@ export class Shoppy extends Contract {
     arg0: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
-    [string, string, BigNumber, string, string, string, boolean] & {
+    [string, string, BigNumber, string, string, boolean] & {
       productId: string;
       name: string;
       price: BigNumber;
-      location: string;
-      method: string;
+      description: string;
       seller: string;
       isActive: boolean;
     }
@@ -523,17 +515,15 @@ export class Shoppy extends Contract {
       _productId: string,
       _name: string,
       _price: BigNumberish,
-      _location: string,
-      _method: string,
+      _description: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "addProduct(string,string,uint256,string,string)"(
+    "addProduct(string,string,uint256,string)"(
       _productId: string,
       _name: string,
       _price: BigNumberish,
-      _location: string,
-      _method: string,
+      _description: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -541,12 +531,11 @@ export class Shoppy extends Contract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, string, string, string, boolean] & {
+      [string, string, BigNumber, string, string, boolean] & {
         productId: string;
         name: string;
         price: BigNumber;
-        location: string;
-        method: string;
+        description: string;
         seller: string;
         isActive: boolean;
       }
@@ -556,12 +545,11 @@ export class Shoppy extends Contract {
       arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
-      [string, string, BigNumber, string, string, string, boolean] & {
+      [string, string, BigNumber, string, string, boolean] & {
         productId: string;
         name: string;
         price: BigNumber;
-        location: string;
-        method: string;
+        description: string;
         seller: string;
         isActive: boolean;
       }
@@ -697,17 +685,15 @@ export class Shoppy extends Contract {
       _productId: string,
       _name: string,
       _price: BigNumberish,
-      _location: string,
-      _method: string,
+      _description: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
-    "addProduct(string,string,uint256,string,string)"(
+    "addProduct(string,string,uint256,string)"(
       _productId: string,
       _name: string,
       _price: BigNumberish,
-      _location: string,
-      _method: string,
+      _description: string,
       overrides?: Overrides
     ): Promise<BigNumber>;
 
@@ -838,17 +824,15 @@ export class Shoppy extends Contract {
       _productId: string,
       _name: string,
       _price: BigNumberish,
-      _location: string,
-      _method: string,
+      _description: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 
-    "addProduct(string,string,uint256,string,string)"(
+    "addProduct(string,string,uint256,string)"(
       _productId: string,
       _name: string,
       _price: BigNumberish,
-      _location: string,
-      _method: string,
+      _description: string,
       overrides?: Overrides
     ): Promise<PopulatedTransaction>;
 

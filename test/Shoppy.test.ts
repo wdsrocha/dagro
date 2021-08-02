@@ -34,43 +34,41 @@ describe("Shoppy", () => {
     await expect(contract.sellerSignUp("Enrique")).to.be.revertedWith(
       "Bank Guarantee of 5ETH Required"
     );
-    await expect(
-      contract.sellerSignUp("Enrique", {
-        value: parseEther("5"),
-      })
-    ).to.be.fulfilled;
+    await contract.sellerSignUp("Vendedor 1", {
+      value: parseEther("5"),
+    });
     await expect(contract.sellerSignUp("Enrique")).to.be.revertedWith(
       "You are Already Registered"
     );
 
-    const addProduct = contract.addProduct(
+    // const sellerData = await contract.sellers(seller.address);
+    // console.log({ sellerData });
+
+    // return;
+
+    const addProduct = await contract.addProduct(
       "0",
       "Banana - 1kg",
       parseEther("4"),
-      "Manaus",
-      "Normal"
-    );
-    await expect(addProduct).to.be.fulfilled;
-
-    const addProductWithSameId = contract.addProduct(
-      "0",
-      "Alface - Un.",
-      parseEther("3"),
-      "Careiro da Várzea",
-      "Normal"
-    );
-    await expect(addProductWithSameId).to.be.revertedWith(
-      "Product With this Id is already Active. Use other UniqueId"
+      "Manaus"
     );
 
-    const addAnotherProduct = contract.addProduct(
+    // const addProductWithSameId = await contract.addProduct(
+    //   "0",
+    //   "Alface - Un.",
+    //   parseEther("3"),
+    //   "Careiro da Várzea"
+    // );
+    // await expect(addProductWithSameId).to.be.revertedWith(
+    //   "Product With this Id is already Active. Use other UniqueId"
+    // );
+
+    const addAnotherProduct = await contract.addProduct(
       "1",
       "Alface - Un.",
       parseEther("3"),
-      "Careiro da Várzea",
-      "Normal"
+      "Careiro da Várzea"
     );
-    await expect(addAnotherProduct).to.be.fulfilled;
 
     interface Product {
       id: string;
