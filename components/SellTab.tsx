@@ -45,7 +45,7 @@ export const SellTab = ({ account, contract }: Props) => {
       });
       await transaction?.wait();
       console.log({ transaction });
-      getSellerAccount();
+      await getSellerAccount();
     } catch (error) {
       setErrorMessage(getErrorMessage(error?.data?.message));
     }

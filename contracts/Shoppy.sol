@@ -55,7 +55,7 @@ contract Shoppy {
     product[] public allProducts;
     mapping(address => ordersPlaced[]) sellerOrders;
     mapping(address => mapping(uint256 => sellerShipment)) sellerShipments;
-    mapping(address => user) users;
+    mapping(address => user) public users;
     mapping(address => orders[]) userOrders;
 
     function sellerSignUp(string memory _name) public payable {

@@ -37,6 +37,7 @@ interface ShoppyInterface extends ethers.utils.Interface {
     "sellerSignUp(string)": FunctionFragment;
     "sellers(address)": FunctionFragment;
     "updateShipment(uint256,string)": FunctionFragment;
+    "users(address)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -82,6 +83,7 @@ interface ShoppyInterface extends ethers.utils.Interface {
     functionFragment: "updateShipment",
     values: [BigNumberish, string]
   ): string;
+  encodeFunctionData(functionFragment: "users", values: [string]): string;
 
   decodeFunctionResult(functionFragment: "addProduct", data: BytesLike): Result;
   decodeFunctionResult(
@@ -117,6 +119,7 @@ interface ShoppyInterface extends ethers.utils.Interface {
     functionFragment: "updateShipment",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "users", data: BytesLike): Result;
 
   events: {};
 }
@@ -336,6 +339,30 @@ export class Shoppy extends Contract {
       _shipmentDetails: string,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    users(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, boolean] & {
+        name: string;
+        email: string;
+        deliveryAddress: string;
+        isCreated: boolean;
+      }
+    >;
+
+    "users(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, boolean] & {
+        name: string;
+        email: string;
+        deliveryAddress: string;
+        isCreated: boolean;
+      }
+    >;
   };
 
   addProduct(
@@ -510,6 +537,30 @@ export class Shoppy extends Contract {
     overrides?: Overrides
   ): Promise<ContractTransaction>;
 
+  users(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, string, boolean] & {
+      name: string;
+      email: string;
+      deliveryAddress: string;
+      isCreated: boolean;
+    }
+  >;
+
+  "users(address)"(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, string, string, boolean] & {
+      name: string;
+      email: string;
+      deliveryAddress: string;
+      isCreated: boolean;
+    }
+  >;
+
   callStatic: {
     addProduct(
       _productId: string,
@@ -676,6 +727,30 @@ export class Shoppy extends Contract {
       _shipmentDetails: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    users(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, boolean] & {
+        name: string;
+        email: string;
+        deliveryAddress: string;
+        isCreated: boolean;
+      }
+    >;
+
+    "users(address)"(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, string, string, boolean] & {
+        name: string;
+        email: string;
+        deliveryAddress: string;
+        isCreated: boolean;
+      }
+    >;
   };
 
   filters: {};
@@ -816,6 +891,13 @@ export class Shoppy extends Contract {
       _purchaseId: BigNumberish,
       _shipmentDetails: string,
       overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    users(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    "users(address)"(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
@@ -958,6 +1040,16 @@ export class Shoppy extends Contract {
       _purchaseId: BigNumberish,
       _shipmentDetails: string,
       overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    users(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "users(address)"(
+      arg0: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

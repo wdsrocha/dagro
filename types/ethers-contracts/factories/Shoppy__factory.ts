@@ -360,6 +360,40 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "users",
+    outputs: [
+      {
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "email",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "deliveryAddress",
+        type: "string",
+      },
+      {
+        internalType: "bool",
+        name: "isCreated",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 
 const _bytecode =

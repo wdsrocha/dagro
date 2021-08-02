@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import { Shoppy, Shoppy__factory } from "../types/ethers-contracts";
 import ptBR from "antd/lib/locale/pt_BR";
 
-const CONTRACT_ADDRESS = "0xcC95d0c7a6D0f4aD91a934a1b06acF9Ee2776ECc";
+const CONTRACT_ADDRESS = "0x61C23fdE94baC7d6667BACF1979c46fb75A8Aa09";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function App({ Component, pageProps }: AppProps) {
@@ -103,7 +103,7 @@ function App({ Component, pageProps }: AppProps) {
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
-            Dagro @2021 Criado por Wesley Rocha
+            DAgro @2021 Criado por Wesley Rocha
           </Footer>
         </Layout>
       </ErrorBoundary>
