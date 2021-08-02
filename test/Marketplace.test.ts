@@ -11,20 +11,13 @@ const { expect } = chai;
 
 describe("Marketplace", () => {
   let contract: Marketplace;
-  let seller: SignerWithAddress;
-  let buyer: SignerWithAddress;
 
   beforeEach(async () => {
-    [seller, buyer] = await ethers.getSigners();
-
     const counterFactory = (await ethers.getContractFactory(
       "Marketplace"
     )) as Marketplace__factory;
     contract = await counterFactory.deploy();
     await contract.deployed();
-
-    console.log({ contractAddress: contract.address });
-    console.log({ sellerAddress: seller.address });
 
     expect(contract.address).to.properAddress;
   });
@@ -44,7 +37,7 @@ describe("Marketplace", () => {
     );
 
     contracts[1].addProduct("Abacaxi (un.)", "Delicioso.", parseEther("5"), 1);
-    contracts[1].addProduct("Alface (kg.)", "Fresquinho..", parseEther("3"), 1);
+    contracts[1].addProduct("Alface (kg.)", "Fresquinho.", parseEther("3"), 1);
 
     const productCount = parseInt((await contract.getProductCount())._hex);
     console.log({ productCount });
@@ -90,6 +83,13 @@ describe("Marketplace", () => {
       console.log(await contract.orders(i));
     }
 
-    // console.log(await contract.accounts(buyer.address));
+    await contracts[1].shipProduct(1);
+    console.log(await contract.orders(1));
+
+    await contracts[3].receiveProduct(1);
+    console.log(await contract.orders(1));
+
+    await expect(contracts[1].cancelOrder(1)).to.be.reverted;
+    await contracts[1].cancelOrder(0);
   });
 });

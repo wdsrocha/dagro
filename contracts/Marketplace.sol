@@ -73,8 +73,10 @@ contract Marketplace {
         uint256 id;
         string status;
         uint256 productId;
-        address buyerId;
-        address sellerId;
+        address payable buyerId;
+        address payable sellerId;
+        uint256 payment;
+        uint256 productQuantity;
     }
 
     mapping(uint256 => Order) public orders;
@@ -94,8 +96,8 @@ contract Marketplace {
             "Quantidade indisponivel"
         );
         require(
-            msg.value == products[productId].price,
-            "O valor enviado deve ser igual o valor do produto"
+            msg.value == products[productId].price * quantity,
+            "Valor incorreto"
         );
 
         products[productId].sellerId.transfer(msg.value);
@@ -105,8 +107,55 @@ contract Marketplace {
         orders[i].id = i;
         orders[i].status = "Pedido realizado";
         orders[i].productId = productId;
-        orders[i].buyerId = msg.sender;
+        orders[i].buyerId = payable(msg.sender);
         orders[i].sellerId = products[productId].sellerId;
+        orders[i].payment = msg.value;
+        orders[i].productQuantity = quantity;
         orderList.push(i);
+    }
+
+    function compareStrings(string memory a, string memory b)
+        private
+        pure
+        returns (bool)
+    {
+        return (keccak256(abi.encodePacked((a))) ==
+            keccak256(abi.encodePacked((b))));
+    }
+
+    function shipProduct(uint256 orderId) public {
+        require(orders[orderId].id == orderId, "Pedido inexistente");
+        require(
+            msg.sender == orders[orderId].sellerId,
+            "Somente o vendedor pode fazer isto"
+        );
+        require(compareStrings(orders[orderId].status, "Pedido realizado"));
+
+        orders[orderId].status = "Produto enviado";
+    }
+
+    function receiveProduct(uint256 orderId) public {
+        require(orders[orderId].id == orderId, "Pedido inexistente");
+        require(
+            msg.sender == orders[orderId].buyerId,
+            "Somente o comprador pode fazer isto"
+        );
+        require(compareStrings(orders[orderId].status, "Produto enviado"));
+
+        orders[orderId].status = "Produto recebido";
+    }
+
+    function cancelOrder(uint256 orderId) public payable {
+        require(orders[orderId].id == orderId, "Pedido inexistente");
+        require(
+            orders[orderId].sellerId == msg.sender,
+            "Somente o vendedor pode fazer isto"
+        );
+        require(!compareStrings(orders[orderId].status, "Produto recebido"));
+        require(!compareStrings(orders[orderId].status, "Pedido cancelado"));
+
+        orders[orderId].status = "Pedido cancelado";
+        uint256 productId = orders[orderId].productId;
+        products[productId].quantity += orders[orderId].productQuantity;
     }
 }
